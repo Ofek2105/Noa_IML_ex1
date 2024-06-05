@@ -1,4 +1,3 @@
-
 import numpy as np
 from typing import NoReturn
 
@@ -35,10 +34,12 @@ class LinearRegression:
         self.fitted_ = False
         self.coefs_ = None
 
-
-def fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
         """
         Fit Least Squares model to given samples
+
+        followed : https://www.geeksforgeeks.org/linear-regression-python-implementation/ for the equations breakdown
+
 
         Parameters
         ----------
@@ -52,7 +53,11 @@ def fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
         -----
         Fits model with or without an intercept depending on value of `self.include_intercept_`
         """
-        pass
+        if self.include_intercept_:
+            one_column = np.ones((X.shape[0], 1))
+            X = np.concatenate([one_column, X], axis=1)
+        self.coefs_ = np.linalg.pinv(X.T @ X) @ X.T @ y
+        self.fitted_ = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -67,8 +72,16 @@ def fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
         -------
         responses : ndarray of shape (n_samples, )
             Predicted responses of given samples
+
         """
-        pass
+        if not self.fitted_:
+            raise ValueError("The model is not fitted yet. Please call `fit` before `predict`.")
+
+        if self.include_intercept_:
+            one_column = np.ones((X.shape[0], 1))
+            X = np.concatenate([one_column, X], axis=1)  # Add intercept term
+
+        return X @ self.coefs_
 
     def loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
@@ -87,4 +100,5 @@ def fit(self, X: np.ndarray, y: np.ndarray) -> NoReturn:
         loss : float
             Performance under MSE loss function
         """
-        pass
+        predictions = self.predict(X)
+        return np.mean((y - predictions) ** 2)
