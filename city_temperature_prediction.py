@@ -137,7 +137,6 @@ def perform_polynomial_fitting(df: pd.DataFrame, country: str, plot_polynomial: 
       plt.legend()
       plt.grid(True)
       plt.savefig(f"saved_images/polynomial_fit_degree_{k}.jpg")
-      # plt.show()
       plt.close()
 
   # Plot the test error for each degree
@@ -148,7 +147,7 @@ def perform_polynomial_fitting(df: pd.DataFrame, country: str, plot_polynomial: 
   plt.title(f'Test Error for Different Polynomial Degrees in {country}')
   plt.grid(True)
   plt.savefig(f"saved_images/best_fit_calculation.jpg")
-  plt.show()
+
 
 
 def get_fit_model(df: pd.DataFrame, country: str, k: int) -> PolynomialFitting:
@@ -214,7 +213,7 @@ def evaluate_model_on_countries(df: pd.DataFrame, model: PolynomialFitting, excl
   plt.ylabel('Mean Squared Error')
   plt.title("Model Error for Different Countries Using Polynomial Fit for Israel (k=3)")
   plt.grid(True)
-  plt.show()
+  plt.savefig(f"saved_images/MSE_each_country.jpg")
 
 
 if __name__ == '__main__':
@@ -223,13 +222,15 @@ if __name__ == '__main__':
   # plot_bar_plots(df)
 
   # Question 3 - Exploring data for specific country
-  # dayofyear_temp_scatterplot(df, 'Israel')
+  dayofyear_temp_scatterplot(df, 'Israel')
+  monthly_error_bar(df, 'Israel')
 
-  # monthly_error_bar(df, 'Israel')
   # Question 4 - Exploring differences between countries
-  # plot_avg_temp_by_country_and_month(df)
+  plot_avg_temp_by_country_and_month(df)
+
   # Question 5 - Fitting model for different values of `k`
-  # perform_polynomial_fitting(df, 'Israel', True)
+  perform_polynomial_fitting(df, 'Israel', True)
+
   # Question 6 - Evaluating fitted model on different countries
   model_israel = get_fit_model(df, 'Israel', k=3)
   evaluate_model_on_countries(df, model_israel, "Israel")
