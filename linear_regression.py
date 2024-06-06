@@ -53,10 +53,18 @@ class LinearRegression:
         -----
         Fits model with or without an intercept depending on value of `self.include_intercept_`
         """
+        self.mean_ = np.mean(X)
+        self.std_ = np.std(X)
+
         if self.include_intercept_:
             one_column = np.ones((X.shape[0], 1))
             X = np.concatenate([one_column, X], axis=1)
+
         self.coefs_ = np.linalg.pinv(X.T @ X) @ X.T @ y
+        # U, s, Vt = np.linalg.svd(X, full_matrices=False)
+        # S_inv = np.diag(1 / s)
+        # self.coefs_ = Vt.T @ S_inv @ U.T @ y
+
         self.fitted_ = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -100,5 +108,5 @@ class LinearRegression:
         loss : float
             Performance under MSE loss function
         """
-        predictions = self.predict(X)
+        predictions = LinearRegression.predict(self, X)
         return np.mean((y - predictions) ** 2)

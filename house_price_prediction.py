@@ -296,13 +296,14 @@ if __name__ == '__main__':
     X_test = preprocess_test(X_test)
 
     # Question 6 - Fit model over increasing percentages of the overall training data
+    reps = 5
     percentages = np.arange(10, 101, 1)
     mean_losses = []
     std_losses = []
 
     for p in percentages:
         losses = []
-        for _ in range(10):
+        for _ in range(reps):
             # 1) Sample p% of the overall training data
             X_sample = X_train.sample(frac=p / 100, random_state=None)
             y_sample = y_train.loc[X_sample.index]
@@ -330,9 +331,9 @@ if __name__ == '__main__':
     plt.fill_between(percentages, lower_bound, upper_bound, color='b', alpha=0.2, label='Confidence Interval')
     plt.xlabel('Percentage of Training Data')
     plt.ylabel('Mean Squared Error')
-    plt.title('Mean Loss as a Function of Training Size')
+    plt.title(f'Mean Loss as a Function of Training Size\n {reps} repetitions')
     plt.legend()
     plt.grid(True)
-    plt.savefig("saved_images/training loss.jpg")
+    plt.savefig(f"saved_images/training loss {reps} reps.jpg")
 
     print("Done")
